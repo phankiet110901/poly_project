@@ -1,0 +1,45 @@
+.social {
+	p{
+		font-size: 10px;
+	}
+	.row {
+		padding: 0 50px;
+		.col-3 {
+			padding-left: 3px;
+			padding-right: 3px;
+			transition: all .2s;
+			img {
+				width: 100%;
+				height: 370px;
+				display: block;
+			}
+			.black-content{
+				display: none;
+				.black-hover{
+					position: absolute;
+					top: 0;
+					background-color: #000;
+					width: 98%;
+					height: 100%;
+					display: block;
+					opacity: 0.5;
+					z-index: 4;
+				}
+				.icon-black-hover{
+					svg{
+						position: absolute;
+						color: $color-white-0;
+						top: 50%;
+						left: 50%;
+						font-size: 25px;
+						z-index: 5;
+					}
+				}
+			}
+			&:hover .black-content{
+				display: block;
+			}
+		}
+	}
+	padding-bottom: 70px;
+}

@@ -1,0 +1,21 @@
+footer{
+	.container-fluid{
+		padding: 0 50px;
+		.row{
+			.col-3{
+				ul{
+					list-style-type: none;
+					li{
+						display: block;
+						a{
+							text-decoration: none;
+							color: $color-black-0;
+							padding: 10px 0;
+							font-size: 11px;
+						}
+					}
+				}
+			}
+		}
+	}
+}
