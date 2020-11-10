@@ -6,21 +6,16 @@ function Show404Err(){
     echo "Loi: 404 (Khong tim thay trang)  !!!!!";
     die();
 }
-
-function ShowErr(){
-    
-}
-
 function ShowAlert($mess){
     echo "<script> alert('".$mess."')</script>";
 }
 
 function Redirect($link){
-    header("location: http://localhost/MyPhpFramework/".$link);
+    header("location: http://localhost/poly_project/".$link);
 }
 
 function GetLinkToRedirect($link) {
-    return "http://localhost/MyPhpFramework/".$link;
+    return "http://localhost/poly_project/".$link;
 }
 
 function ShowErrNotFoundModel(){
