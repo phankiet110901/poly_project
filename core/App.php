@@ -38,11 +38,8 @@ class App{
                }else{
                    Show404Err();
                }
-    
             }
-            
         }
-        
         require_once $this->controllerUrl.$this->controller.".php";
         $this->controller = new $this->controller; // khoi tao doi tuong controller
         // Xu li action
@@ -73,7 +70,7 @@ class App{
 
     function UrlProcess(){
         // kiem tra url co duoc nhap day du hay khong
-        if( isset($_GET["url"]) ){
+        if(isset($_GET["url"]) ){
            $url = filter_var(trim($_GET["url"])); // lam sach url
            return explode("/",filter_var(trim($_GET["url"]))); // tach gia tri
         }

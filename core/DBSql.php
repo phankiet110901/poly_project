@@ -6,7 +6,7 @@ class DBSql
     private $host = "localhost";
     private $userName = "root";
     private $pass = "";
-    private $dbName = "phoneSale";
+    private $dbName = "project";
     protected $conn;
 
     public function __construct()
@@ -29,7 +29,23 @@ class DBSql
 
         return $dataOutput;
     }
+    public function SelectOneCondition($tableName, $condition)
+    {
 
+        foreach ($condition as $key => $value) {
+            $keySql = $key;
+            $valueSql = $value;
+        }
+
+        $sql = "SELECT * FROM `$tableName` WHERE `$keySql` = $valueSql ";
+        $res = $this->conn->Query($sql);
+
+        $dataOutput = [];
+
+        $dataOutput = $res->fetch_assoc();
+        
+        return $dataOutput;
+    }
     public function Delete($tableName, $condition)
     {
 
