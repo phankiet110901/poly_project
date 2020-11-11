@@ -25,14 +25,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c8d144ab-1255-4ce7-b56d-7ff79623967a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/config/config.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/App.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/App.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/Controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/Controller.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/DBSql.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/DBSql.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/function.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/function.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvc/views/.gitignore" beforeDir="false" />
-    </list>
+    <list default="true" id="c8d144ab-1255-4ce7-b56d-7ff79623967a" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -66,7 +59,7 @@
       <workItem from="1604984307233" duration="9365000" />
       <workItem from="1605072920914" duration="2000" />
       <workItem from="1605072934907" duration="304000" />
-      <workItem from="1605076030139" duration="2947000" />
+      <workItem from="1605076030139" duration="3572000" />
     </task>
     <servers />
   </component>
