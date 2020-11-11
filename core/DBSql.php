@@ -6,7 +6,7 @@ class DBSql
     private $host = "localhost";
     private $userName = "root";
     private $pass = "";
-    private $dbName = "phoneSale";
+    private $dbName = "project";
     protected $conn;
 
     public function __construct()
@@ -41,7 +41,8 @@ class DBSql
             $valueSql = $value;
         }
 
-        $sql = "DELETE FROM {$tableName} Where `$keySql` = $valueSql";
+        $sql = "DELETE FROM {$tableName} Where `$keySql` = '$valueSql'";
+
         $res = $this->conn->Query($sql);
 
         if ($res) {
@@ -61,7 +62,6 @@ class DBSql
             $keySql = $key;
             $valueSql = $value;
         }
-        //
 
         // process update SET
         $updateSet = "";
@@ -70,10 +70,9 @@ class DBSql
         }
 
         $updateSet = substr($updateSet, 0, strlen($updateSet) - 1);
-        //
 
+        $sql = "UPDATE `$tableName` SET $updateSet WHERE `$keySql` = '$valueSql' ";
 
-        $sql = "UPDATE `$tableName` SET $updateSet WHERE `$keySql` = $valueSql ";
         if ($this->conn->Query($sql)) {
             return true;
         }
@@ -152,7 +151,7 @@ class DBSql
         }
         $fields = substr($fields, 0, strlen($fields) - 1); // loai bo ki tu cuoi cung cua chuoi
 
-        $sql = "SELECT $fields FROM $tableName Where `$keySql` = $valueSql ";
+        $sql = "SELECT $fields FROM $tableName Where `$keySql` = '$valueSql' ";
 
         $res = $this->conn->Query($sql);
 
