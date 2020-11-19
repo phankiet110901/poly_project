@@ -1,11 +1,16 @@
 <?php
 
+use core\JWT;
+
+require "core/jwt.php";
+
+
 abstract class Controller
 {
     private $modelUrl = "./mvc/models/";
-    private $viewUrl = "./mvc/views/";
+    protected $secretKey = 'KIET_DEP_TRAI_VO_DICH_VU_TRU';
 
-    public function LoadModel($modelName)
+    public function LoadModel($modelName): DBSql
     {
         // kiem tra model co ton tai hay khong
         if (file_exists($this->modelUrl . $modelName . ".php")) {
@@ -14,18 +19,9 @@ abstract class Controller
         }
     }
 
-    public function LoadView($viewName, $data = [])
-    {
-        // kiem tra view co ton tai hay khong
-        if (file_exists($this->viewUrl . $viewName . ".php")) {
-            require_once $this->viewUrl . $viewName . ".php";
-            //return new $viewName;
-        }
-    }
+    abstract public function DefaultPage(): void;
 
-    abstract public function DefaultPage();
-
-    protected function response($status_code, $data = [])
+    protected function response(int $status_code, array $data = []): string
     {
         // Allow from any origin
         if (isset($_SERVER['HTTP_ORIGIN'])) {
@@ -51,12 +47,12 @@ abstract class Controller
         die();
     }
 
-    protected function getRequestType()
+    protected function getRequestType(): string
     {
         return $_SERVER["REQUEST_METHOD"];
     }
 
-    protected function _build_http_header_string($status_code)
+    protected function _build_http_header_string(int $status_code): string
     {
         $status = array(
             200 => 'OK',
@@ -76,7 +72,7 @@ abstract class Controller
         return json_decode(file_get_contents("php://input"), true);
     }
 
-    protected function ValidDataFromRequest($listTableForAdd, $dataFromRequest)
+    protected function ValidDataFromRequest(array $listTableForAdd, array $dataFromRequest): void
     {
         // empty or less data
         if (empty($dataFromRequest) || (count($dataFromRequest) !== count($listTableForAdd))) {
@@ -98,6 +94,100 @@ abstract class Controller
         }
     }
 
+    protected function getDataFromHeader(): array
+    {
+        return apache_request_headers();
+    }
+
+    protected function handleWrongUrl(): void
+    {
+        $this->response(400, ["code" => 400, "message" => "Invalid URL"]);
+    }
+
+    protected function handleWrongMethod(string $methodType): void
+    {
+        if ($this->getRequestType() !== $methodType) {
+            $this->response(405);
+        }
+    }
+
+    protected function Auth(string $tableName, array $data): bool
+    {
+        $db = new DBSql();
+        if ($db->CountRow($tableName, $data) === 0) {
+            return false;
+        }
+        return true;
+    }
+
+    protected function HandleTokenValidate(): void
+    {
+        $headerReq = $this->getDataFromHeader();
+        if (!isset($headerReq['Authorization'])) {
+            $this->response(401);
+        }
+
+        // decode token
+        try {
+            $token = JWT::decode($headerReq['Authorization'], $this->secretKey);
+        } catch (Exception $e) {
+            $this->response(401, ['code' => 401, 'message' => 'Can Not Decode Token']);
+        }
+
+        // validate token
+        if (!isset($token->time_end) || $token->time_end < getCurrentDate()) {
+            $this->response(401, ['code' => 401, 'message' => 'Invalid Token']);
+        }
+
+        if (!isset($token->userID) || !isset($token->roleName)) {
+            $this->response(401, ['code' => 401, 'message' => 'Invalid Token']);
+        }
+
+        if (!$this->Auth("user_role", ['roleName' => $token->roleName])) {
+            $this->response(401, ['code' => 401, 'message' => 'Invalid Token']);
+        }
+
+
+        if (!$this->Auth("user", ['userID' => $token->userID])) {
+            $this->response(401, ['code' => 401, 'message' => 'Invalid Token']);
+        }
+    }
+
+    protected function UploadImg(string $folderUploadName, array $fileInfo, string $nameProperty): string
+    {
+        if (empty($fileInfo)) {
+            $this->response(400, ['code' => 400, 'message' => 'File Can Not Empty']);
+        }
+
+        $listType = ["image/gif", "image/png", "image/jpg", "image/jpeg"];
+
+        if (!array_search($fileInfo[$nameProperty]['type'], $listType)) {
+            $this->response(400, ['code' => 400, 'message' => 'File Upload Is Not Image']);
+        }
+
+        if ($fileInfo[$nameProperty]['error'] !== 0) {
+            $this->response(400, ['code' => 400, 'message' => 'File Error']);
+        }
+
+        // get and decode file name to base64
+        $fileName = $fileInfo[$nameProperty]['name'];
+        $fileName = explode('.', $fileName);
+
+        // check format name file
+        if (count($fileName) !== 2) {
+            $this->response(400, ['code' => 400, 'message' => 'Wrong Format Name File']);
+        }
+
+        $fileName[0] = str_replace('=', '', base64_encode($fileName[0]));
+        $fileName = implode('.', $fileName);
+        $resUpload = move_uploaded_file($fileInfo[$nameProperty]['tmp_name'], $folderUploadName . $fileName);
+
+        if (!$resUpload) {
+            return '';
+        }
+
+        return $folderUploadName.$fileName;
+    }
 }
 
 

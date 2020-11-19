@@ -3,45 +3,44 @@
 
 class Catalog extends Controller
 {
-    private $listTableName = ["catalogID", "catalogName", "catalogOrder", "catalogStatus"];
 
-    public function DefaultPage()
+    private $listFieldName = ["catalogID", "catalogName", "catalogOrder", "catalogStatus"];
+
+    public function DefaultPage(): void
     {
         // TODO: Implement DefaultPage() method.
-        $this->response(400, ["code" => 400, "message" => "Invalid URL"]);
+        $this->handleWrongUrl();
     }
 
-    public function GetAllCatalog()
+    public function GetAllCatalog(): void
     {
         $this->response(200, $this->LoadModel("CatalogModel")->GetAllCatalog());
     }
 
-    public function AddCatalog()
+    public function AddCatalog(): void
     {
 
         // method not allow
-        if ($this->getRequestType() !== "POST") {
-            $this->response(405);
-        }
+        $this->handleWrongMethod("POST");
 
-        // remove catalogID field
-        $listTableForAdd = array_slice($this->listTableName, 1);
-        $fieldId = $this->listTableName[0]; // get id field
+        $this->HandleTokenValidate();
 
-        // remove catalogOrder field
-        array_splice($listTableForAdd, 1, 1);
+
+        $listFieldForAdd = [$this->listFieldName[1]];
+        $fieldId = $this->listFieldName[0]; // get id field
+
 
         // read data in body request
         $bodyContent = $this->GetDataFromBody();
 
-        $this->ValidDataFromRequest($listTableForAdd, $bodyContent);
+        $this->ValidDataFromRequest([$this->listFieldName[1]], $bodyContent);
 
 
         // insert data in database
         $dataInsert[$fieldId] = genUUIDV4(); // create id
 
         // set data
-        foreach ($listTableForAdd as $tableName) {
+        foreach ($listFieldForAdd as $tableName) {
             $dataInsert[$tableName] = $bodyContent[$tableName];
         }
 
@@ -53,11 +52,12 @@ class Catalog extends Controller
 
     }
 
-    public function EditCatalog($idCatalog = null)
+    public function EditCatalog(string $idCatalog = null): void
     {
-        if ($this->getRequestType() != "PUT") {
-            $this->response(405);
-        }
+        $this->handleWrongMethod("PUT");
+
+
+        $this->HandleTokenValidate();
 
         if (!$idCatalog) {
             $this->response(400, ["code" => 400, "message" => 'ID Can Not Empty']);
@@ -71,7 +71,7 @@ class Catalog extends Controller
 
         $dataPut = $this->GetDataFromBody();
 
-        $this->ValidDataFromRequest([$this->listTableName[1], $this->listTableName[3]], $dataPut);
+        $this->ValidDataFromRequest([$this->listFieldName[1]], $dataPut);
 
         if ($this->LoadModel("CatalogModel")->EditCatalog($idCatalog, $dataPut)) {
             $this->response(200, $dataPut);
@@ -81,12 +81,11 @@ class Catalog extends Controller
 
     }
 
-    public function DeleteCatalog($idCatalog = null)
+    public function DeleteCatalog(string $idCatalog = null): void
     {
-        // check type request
-        if ($this->getRequestType() != "DELETE") {
-            $this->response(405);
-        }
+        $this->handleWrongMethod("DELETE");
+
+        $this->HandleTokenValidate();
 
         // check param id
         if (!$idCatalog) {
@@ -106,6 +105,7 @@ class Catalog extends Controller
         }
 
     }
+
 }
 
 

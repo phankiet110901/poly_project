@@ -8,31 +8,6 @@ function Show404Err()
     die();
 }
 
-function ShowErr()
-{
-
-}
-
-function ShowAlert($mess)
-{
-    echo "<script> alert('" . $mess . "')</script>";
-}
-
-function Redirect($link)
-{
-    header("location: http://localhost/MyPhpFramework/" . $link);
-}
-
-function GetLinkToRedirect($link)
-{
-    return "http://localhost/MyPhpFramework/" . $link;
-}
-
-function ShowErrNotFoundModel()
-{
-
-}
-
 function SetDefaultPage($namePage, $defaulAction, $defaulParam)
 {
     if ($namePage == "") {
@@ -42,30 +17,6 @@ function SetDefaultPage($namePage, $defaulAction, $defaulParam)
     }
 }
 
-function GetAllGlobalData()
-{
-    global $globalData;
-    return $globalData;
-}
-
-function GetGlobalData($dataName)
-{
-    global $globalData;
-    return $globalData[$dataName];
-}
-
-function CheckAuthor($key, $page)
-{
-    if (isset($_SESSION[$key]) === false || empty($_SESSION[$key])) {
-        Redirect($page);
-    }
-}
-
-function OptionalChaining($arrayCheck, $key, $dataGet)
-{
-    if (isset($arrayCheck[$key]) === false || empty($arrayCheck) === true || isset($arrayCheck[$key][$dataGet]) === false) return "";
-    return $arrayCheck[$key][$dataGet];
-}
 
 function genUUIDV4()
 {
@@ -91,4 +42,12 @@ function genUUIDV4()
     );
 }
 
+function getCurrentDate()
+{
+    return date('Y-m-d');
+}
 
+function addDay($time, $dayAdd)
+{
+    return date('Y-m-d', strtotime($time. " + {$dayAdd} days"));
+}

@@ -1,5 +1,6 @@
 <?php
 
+
 class DBSql
 {
 
@@ -15,7 +16,7 @@ class DBSql
         mysqli_query($this->conn, "SET NAMES 'utf-8' ");
     }
 
-    public function SelectAll($tableName)
+    public function SelectAll(string $tableName): array
     {
 
         $sql = "SELECT * FROM `$tableName` ";
@@ -30,7 +31,7 @@ class DBSql
         return $dataOutput;
     }
 
-    public function Delete($tableName, $condition)
+    public function Delete(string $tableName, array $condition): bool
     {
 
         $keySql = "";
@@ -52,7 +53,7 @@ class DBSql
         return false;
     }
 
-    public function Update($tableName, $dataUpdate, $condition)
+    public function Update(string $tableName, array $dataUpdate, array $condition): bool
     {
         $keySql = "";
         $valueSql = "";
@@ -80,7 +81,7 @@ class DBSql
         return false;
     }
 
-    public function Insert($tableName, $dataInsert)
+    public function Insert(string $tableName, array $dataInsert): bool
     {
 
         $fields = "( ";
@@ -96,6 +97,7 @@ class DBSql
         $values = substr($values, 0, strlen($values) - 1) . ")";
 
         $sql = "INSERT INTO `$tableName` $fields VALUES $values ";
+
         if ($this->conn->Query($sql)) {
             return true;
         }
@@ -103,7 +105,7 @@ class DBSql
         return false;
     }
 
-    public function Select($tableName, $fieldList)
+    public function Select(string $tableName, array $fieldList): array
     {
 
         $fields = "";
@@ -127,31 +129,37 @@ class DBSql
         return $dataOutput;
     }
 
-    public function CustomQuery($sql)
-    {   
+    public function CustomQuery(string $sql): bool
+    {
         return $this->conn->Query($sql);
     }
 
-    public function SelectCondition($tableName, $fieldList, $condition)
+    public function SelectCondition(string $tableName, array $fieldList, array $condition): array
     {
 
         $fields = "";
 
-        $keySql = "";
-        $valueSql = "";
+        $listField = array_keys($condition);
+        $listValue = array_values($condition);
 
-        foreach ($condition as $key => $value) {
-            $keySql = $key;
-            $valueSql = $value;
+        $conditionInQuery = "";
+
+        if (count($condition) === 1) {
+            $conditionInQuery = "${listField[0]} = '${listValue[0]}' ";
+        } else {
+            foreach ($condition as $field => $value) {
+                $conditionInQuery .= "${field} = '${value}' AND ";
+            }
+            $conditionInQuery = rtrim($conditionInQuery, ' AND');
         }
 
-        // lay tung field 
+        // lay tung field
         foreach ($fieldList as $value) {
             $fields .= "`$value`,";
         }
         $fields = substr($fields, 0, strlen($fields) - 1); // loai bo ki tu cuoi cung cua chuoi
 
-        $sql = "SELECT $fields FROM $tableName Where `$keySql` = '$valueSql' ";
+        $sql = "SELECT $fields FROM $tableName Where ${conditionInQuery} ";
 
         $res = $this->conn->Query($sql);
 
@@ -162,5 +170,30 @@ class DBSql
         }
 
         return $dataOutput;
+    }
+
+    public function CountRow(string $tableName, array $dataCheck): int
+    {
+        $listField = array_keys($dataCheck);
+        $listValue = array_values($dataCheck);
+
+        foreach ($listField as $key => $value) {
+            $listField[$key] = "`" . $value . "`";
+        }
+
+        $conditionInQuery = "";
+
+        if (count($dataCheck) === 1) {
+            $conditionInQuery = "${listField[0]} = '${listValue[0]}' ";
+        } else {
+            foreach ($dataCheck as $field => $value) {
+                $conditionInQuery .= "${field} = '${value}' AND ";
+            }
+            $conditionInQuery = rtrim($conditionInQuery, ' AND');
+        }
+
+        $sql = "SELECT count(*) as total FROM ${tableName} WHERE ${conditionInQuery}";
+
+        return $this->conn->Query($sql)->fetch_assoc()["total"];
     }
 }

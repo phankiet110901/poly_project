@@ -5,17 +5,17 @@ class CatalogModel extends DBSql
 {
     private $tableName = "product_catalog";
 
-    public function GetAllCatalog()
+    public function GetAllCatalog() : array
     {
         return $this->SelectAll($this->tableName);
     }
 
-    public function AddCatalog($dataCatalog)
+    public function AddCatalog(array $dataCatalog) : bool
     {
         return $this->Insert($this->tableName, $dataCatalog);
     }
 
-    public function CheckExistCatalog($idCatalog)
+    public function CheckExistCatalog(string $idCatalog) : bool
     {
         $dataFromDB = $this->SelectCondition("product_catalog", ["catalogID"], ["catalogID" => $idCatalog]);
 
@@ -26,12 +26,12 @@ class CatalogModel extends DBSql
         return true;
     }
 
-    public function EditCatalog($idCatalog, $dataEdit)
+    public function EditCatalog(string $idCatalog, array $dataEdit) : bool
     {
         return $this->Update("product_catalog", $dataEdit, ["catalogID" => $idCatalog]);
     }
 
-    public function DeleteCatalog($idCatalog)
+    public function DeleteCatalog(string $idCatalog) : bool
     {
         return $this->Delete("product_catalog", ["catalogID" => $idCatalog]);
     }
