@@ -106,6 +106,38 @@ class Catalog extends Controller
 
     }
 
+    public function ChangeStatusCatalog(string $idCatalog = null): void
+    {
+        $this->handleWrongMethod("PUT");
+        $this->HandleTokenValidate();
+
+        if (!$idCatalog) {
+            $this->response(400);
+        }
+
+        if (!$this->Auth('product_catalog', [$this->listFieldName[0] => $idCatalog])) {
+            $this->response(400, ['code' => 400, 'message' => 'Invalid Id Catalog']);
+        }
+
+        $currentStatus = $this->LoadModel("CatalogModel")->GetCurrentStatusCatalog($idCatalog);
+
+        if (!$this->LoadModel("CatalogModel")->UpdateStatusCatalog($idCatalog, !$currentStatus)) {
+            $this->response(500);
+        }
+
+        $this->response(200);
+    }
+
+    public function ChangeOrderCatalog(string $idCatalog, int $newOrderCatalog): void
+    {
+        $res = $this->LoadModel("CatalogModel")->GetInfoCatalogEditOrder($idCatalog, $newOrderCatalog);
+
+        if(!$res){
+            $this->response(500);
+        }
+        $this->response(200);
+
+    }
 }
 
 

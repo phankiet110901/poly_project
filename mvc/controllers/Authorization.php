@@ -64,7 +64,7 @@ class Authorization extends Controller
         }
 
         if ($typeUser != 'Memer') {
-            $this->HandleTokenValidate();
+//            $this->HandleTokenValidate();
         }
 
         $dataRegister = $this->GetDataFromBody();
@@ -83,8 +83,7 @@ class Authorization extends Controller
 
         $dataRegister["roleName"] = $listType[$typeUser];
         $dataRegister["userID"] = genUUIDV4();
-        $hashPassword = password_hash($dataRegister['userPassword'], PASSWORD_BCRYPT); // decode password with bcrypt
-        $dataRegister["userPassword"] = $hashPassword;
+        $dataRegister["userPassword"] = $this->encodeBcryptString($dataRegister['userPassword']);
         $resAdd = $this->LoadModel("AuthModel")->AddUser($dataRegister);
 
         if ($resAdd) {

@@ -188,6 +188,11 @@ abstract class Controller
 
         return $folderUploadName.$fileName;
     }
+
+    protected function encodeBcryptString(string $inputString) : string
+    {
+        return password_hash($inputString, PASSWORD_BCRYPT);;
+    }
 }
 
 
