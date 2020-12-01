@@ -72,17 +72,19 @@ class User extends Controller
 
         $currentUserAvatar = $this->LoadModel("UserModel")->GetInfoUser($idUser)['userAvatar'];
 
-        if (!$currentUserAvatar) {
+        if (!empty($currentUserAvatar)) {
             unlink($currentUserAvatar);
         }
 
         $res = $this->UploadImg('upload/', $_FILES, $this->listField[5]);
 
+        $newPathFileUpload = "https://52.237.89.87/".$res;
+
         if (!$res) {
             $this->response(500, ['code' => 500, 'message' => 'Failed To Upload Img']);
         }
 
-        if ($this->LoadModel("UserModel")->EditUser(['userAvatar' => $res], $idUser)) {
+        if ($this->LoadModel("UserModel")->EditUser(['userAvatar' => $newPathFileUpload], $idUser)) {
             $this->response(200);
         }
 
@@ -139,5 +141,43 @@ class User extends Controller
         $this->response(500);
     }
 
+    public function ChangePassword(string $idUser = null): void
+    {
+        // Check Method
+        $this->handleWrongMethod("PUT");
+
+        // Check Token
+        $this->HandleTokenValidate();
+
+        // Check Empty Or Not
+        if(!$idUser)
+        {
+            $this->response(400, ["code" => "userID Can Not Be Empty"]);
+        }
+
+        // Check exist
+        if (!$this->Auth('user', ['userID' => $idUser])) {
+            $this->response(400, ['code' => 400, 'message' => 'UserID InValid']);
+        }
+
+        // Read Edit Data From Body
+        $dataEdit = $this->GetDataFromBody();
+
+        // Validate Data From Body
+        $this->ValidDataFromRequest([$this->listField[2]], $dataEdit);
+
+        // Decrypt New Password
+        $newPassword = $this->encodeBcryptString($dataEdit['userPassword']);
+        $dataEdit["userPassword"] = $newPassword;
+
+        // Change Password
+        if ($this->LoadModel("UserModel")->EditUser($dataEdit, $idUser)) {
+            $this->response(200, ["code" => 200, "message" => "Update Password Completed"]);
+        }
+        else
+        {
+            $this->response(500);
+        }
+    }
 
 }

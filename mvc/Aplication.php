@@ -1,4 +1,8 @@
 <?php 
+    //Send Email Via Phpmailer
+    require './phpmailer/Exception.php';
+    require './phpmailer/PHPMailer.php';
+    require './phpmailer/SMTP.php';
     // De cac class co the extend duoc lop DBSql
     require_once "./core/DBSql.php";
     // Autoload file

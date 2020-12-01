@@ -112,6 +112,7 @@ class Authorization extends Controller
         // handle upload and save file
         $pathFileUpload = $this->UploadImg('upload/',$_FILES,$this->listField[5]);
 
+        $pathFileUpload = "https://52.237.89.87/".$pathFileUpload;
 
         // insert into database
         if(!$pathFileUpload){

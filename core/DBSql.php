@@ -31,6 +31,30 @@ class DBSql
         return $dataOutput;
     }
 
+    public function SelectAllCondition($tableName, $condition)
+    {
+        // Get Condition
+        $keySql = "";
+        $valueSql = "";
+
+        foreach($condition as $key => $value)
+        {
+            $keySql = $key;
+            $valueSql = $value;
+        }
+
+        $sql = "SELECT * FROM `$tableName` WHERE `$keySql` = '$valueSql'";
+        $res = $this->conn->Query($sql);
+
+        $dataOutput = [];
+
+        while ($rows = $res->fetch_assoc()) {
+            array_push($dataOutput, $rows);
+        }
+        return $dataOutput;
+    }
+
+
     public function Delete(string $tableName, array $condition): bool
     {
 
@@ -134,6 +158,20 @@ class DBSql
         return $this->conn->Query($sql);
     }
 
+
+    public function SearchQuery(string $sql): array
+    {
+        $result = $this->conn->Query($sql);
+
+        $dataOutput = [];
+
+        while ($rows = $result->fetch_assoc()) {
+            array_push($dataOutput, $rows);
+        }
+
+        return $dataOutput;
+    }
+
     public function SelectCondition(string $tableName, array $fieldList, array $condition): array
     {
 
@@ -196,4 +234,5 @@ class DBSql
 
         return $this->conn->Query($sql)->fetch_assoc()["total"];
     }
+
 }
