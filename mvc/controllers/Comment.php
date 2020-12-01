@@ -132,8 +132,9 @@ class Comment extends Controller{
         }
         else
         {
-            $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
-        }        
+            $this->response(400, ["code" => 400, "message" => "You must remove product comment"]);
+        }
+        $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
     }
 }
 

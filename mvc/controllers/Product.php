@@ -96,8 +96,8 @@ class Product extends Controller{
         // Prepare Values To Insert
         $dataInsert = $bodyContent;
         $dataInsert['productID'] = genUUIDV4();
-        $dataInsert['catalogID'] = json_encode(['catalogID'=> $dataInsert['catalogID'],
-                                                'catalogName' => $getCatalogName], JSON_UNESCAPED_SLASHES);
+        $dataInsert['catalogName'] = $getCatalogName;
+        
         // Prepare to Insert
         if ($this->LoadModel("ProductModel")->AddProduct($dataInsert)) {
             $this->response(201, ["code" => 201, "message" => "Action Completely Successful"]);
@@ -137,6 +137,13 @@ class Product extends Controller{
         $this->listTableName[10]
         ], $dataEdit);
 
+        $getCatalogName = $this->LoadModel("ProductModel")->CheckExistCatalog($dataEdit['catalogID']);
+        //Validate Catalog
+        if (!$getCatalogName) {
+            $this->response(400, ['code'=> 400, 'message' => 'invalid catalogID']);
+        }
+        $dataEdit['catalogName'] = $getCatalogName;
+        
         // Edit Product
         if ($this->LoadModel("ProductModel")->EditProduct($productID, $dataEdit)) {
             $this->response(200, ["message" => "Action Completely Successful"]);
@@ -191,8 +198,9 @@ class Product extends Controller{
         }
         else
         {
-            $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
+            $this->response(400, ["code" => 400, "message" => "You must remove comment related to this product to delete"]);
         }
+        $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
     }
 
     public function UploadProductImg(string $productID = null) : void
@@ -202,6 +210,9 @@ class Product extends Controller{
 
         // Check Token
         $this->HandleTokenValidate();
+
+        // Get Absolute Path
+        $absolutePath = "https://52.237.89.87/poly_project/";
 
         // Check Empty Or Not
         if (!($productID)) {
@@ -217,9 +228,9 @@ class Product extends Controller{
         }
 
         // Get Absolute Path
-        $newPathFileUpload = "https://52.237.89.87/".$pathFileUpload;
+        $pathFileUpload = $absolutePath.$pathFileUpload;
 
-        if ($this->LoadModel("ProductModel")->AddImageProduct($newPathFileUpload, $productID)) {
+        if ($this->LoadModel("ProductModel")->AddImageProduct($pathFileUpload, $productID)) {
             $this->response(200);
         }
 
@@ -235,10 +246,14 @@ class Product extends Controller{
         // Check Token
         $this->HandleTokenValidate();
 
+        // Get Absolute Path
+        $newPathFileUpload = "https://52.237.89.87/poly_project/";
+
         // Delete Old Image
         $currentProductImg = $this->LoadModel("ProductModel")->GetImageProduct($productID)['productImg'];
-        if (!empty($currentProductImg)) {
-            unlink($currentProductImg);
+        $fileUrl = str_replace("/poly_project/","", parse_url($currentProductImg, PHP_URL_PATH));
+        if (!empty($currentProductImg) && file_exists($fileUrl)) {
+            unlink($fileUrl);
         }
 
         // Upload New Image
@@ -247,10 +262,9 @@ class Product extends Controller{
         if (!$res) {
             $this->response(500, ['code' => 500, 'message' => 'Failed To Upload Img']);
         }
-        // Get Absolute Path
-        $newPathFileUpload = "https://52.237.89.87/".$res;
 
-        if ($this->LoadModel("ProductModel")->EditProduct($productID, ['productImg' => $newPathFileUpload])) {
+        $res = $newPathFileUpload.$res;
+        if ($this->LoadModel("ProductModel")->EditProduct($productID, ['productImg' => $res])) {
             $this->response(200);
         }
 

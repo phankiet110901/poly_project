@@ -35,10 +35,11 @@ class ProductModel extends DBSql{
     // Delete Product
     public function DeleteProduct(string $productID) : bool
     {
-        $InfoProd = $this->SelectCondition($this->tableName, ['productImg'], ['productID' => $productID])[0];
-
-        if (!empty($InfoProd)) {
-            unlink($InfoProd['productImg']);
+        // Delete Old Image
+        $currentProductImg = $this->GetImageProduct($productID)['productImg'];
+        $fileUrl = str_replace("/poly_project/","", parse_url($currentProductImg, PHP_URL_PATH));
+        if (!empty($currentProductImg) && file_exists($fileUrl)) {
+            unlink($fileUrl);
         }
 
         return $this->Delete($this->tableName, ["productID" => $productID]);
@@ -94,6 +95,7 @@ class ProductModel extends DBSql{
 
         return $dataFromDB['catalogName'];
     }
+
 
 }
 ?>
