@@ -179,8 +179,15 @@ class Product extends Controller{
             $this->response(400, ["code" => 400, "message" => "productID Invalid"]);
         }
 
+        // Delete Old Image
+        $currentProductImg = $this->LoadModel("ProductModel")->GetImageProduct($productID)['productImg'];
+        $fileUrl = str_replace("/poly_project/","", parse_url($currentProductImg, PHP_URL_PATH));
+        
         // Delete Product
         if ($this->LoadModel("ProductModel")->DeleteProduct($productID)) {
+            if (!empty($currentProductImg) && file_exists($fileUrl)) {
+                unlink($fileUrl);
+            }    
             $this->response(201, ["code" => 201, "message" => "Action Completely Successful"]);
         }
         else

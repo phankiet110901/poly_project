@@ -15,6 +15,7 @@ class Search extends Controller
         if (!($keywords)) {
             $this->response(400, ['code'=>400, 'message'=>'Keywords Can Not Be Empty']);
         }
+        $keywords = trim($keywords);
 
         $result = $this->LoadModel("ProductModel")->SearchProduct($keywords);
 

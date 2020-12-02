@@ -109,14 +109,19 @@ class User extends Controller
             $this->response(400, ['code' => 400, 'message' => 'Invalid User ID']);
         }
 
-        $userDelAvatar = $this->LoadModel("UserModel")->GetInfoUser($idUser)['userAvatar'];
-
-        if (!$userDelAvatar) {
-            unlink($userDelAvatar);
-        }
+        // Get Image
+        $infoUser = $this->LoadModel("UserModel")->GetInfoUser($idUser);
+        $fileUrl = str_replace("/poly_project/","", parse_url($infoUser['userAvatar'], PHP_URL_PATH));
 
         if ($this->LoadModel('UserModel')->DeleteUser($idUser)) {
-            $this->response(200);
+            if(!empty($fileUrl) && file_exists($fileUrl)) {
+                unlink($fileUrl);
+            }
+            $this->response(201);
+        }
+        else
+        {
+            $this->response(400, ['code' => 400, 'message' => 'You must remove user comments before deleting this user']);
         }
 
         $this->response(500);

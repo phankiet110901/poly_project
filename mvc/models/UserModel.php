@@ -15,13 +15,6 @@ class UserModel extends DBSql
 
     public function DeleteUser(string $idUser) : bool
     {
-        $infoUser = $this->SelectCondition('user',['userAvatar'],['userID' => $idUser])[0];
-        $fileUrl = str_replace("/poly_project/","", parse_url($infoUser['userAvatar'], PHP_URL_PATH));
-
-        if(!empty($fileUrl)) {
-            unlink($fileUrl);
-        }
-
         return $this->Delete('user',['userID' => $idUser]);
     }
 
