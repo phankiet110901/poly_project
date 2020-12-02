@@ -4,6 +4,7 @@
 class User extends Controller
 {
     private $listField = ["userID", "userName", "userPassword", "name", "userEmail", "userAvatar", "userStatus", "roleName"];
+    private $absolutePath = "http://52.237.89.87/poly_project/";
 
     public function DefaultPage(): void
     {
@@ -71,14 +72,14 @@ class User extends Controller
         }
 
         $currentUserAvatar = $this->LoadModel("UserModel")->GetInfoUser($idUser)['userAvatar'];
-
-        if (!empty($currentUserAvatar)) {
-            unlink($currentUserAvatar);
+        $fileUrl = str_replace("/poly_project/","", parse_url($currentUserAvatar, PHP_URL_PATH));
+        if (!empty($currentUserAvatar) && file_exists($fileUrl)) {
+            unlink($fileUrl);
         }
 
-        $res = $this->UploadImg('upload/', $_FILES, $this->listField[5]);
+        $res = $this->UploadImg('upload/user/', $_FILES, $this->listField[5]);
 
-        $newPathFileUpload = "https://52.237.89.87/".$res;
+        $newPathFileUpload = $this->absolutePath.$res;
 
         if (!$res) {
             $this->response(500, ['code' => 500, 'message' => 'Failed To Upload Img']);

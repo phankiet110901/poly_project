@@ -6,6 +6,8 @@ use core\JWT;
 class Authorization extends Controller
 {
     private $listField = ["userID", "userName", "userPassword", "name", "userEmail", "userAvatar", "userStatus", "roleName"];
+    private $absolutePath = "http://52.237.89.87/poly_project/";
+
 
     public function DefaultPage(): void
     {
@@ -110,9 +112,9 @@ class Authorization extends Controller
         }
 
         // handle upload and save file
-        $pathFileUpload = $this->UploadImg('upload/',$_FILES,$this->listField[5]);
+        $pathFileUpload = $this->UploadImg('upload/user/',$_FILES,$this->listField[5]);
 
-        $pathFileUpload = "https://52.237.89.87/".$pathFileUpload;
+        $pathFileUpload = $this->absolutePath.$pathFileUpload;
 
         // insert into database
         if(!$pathFileUpload){

@@ -15,6 +15,7 @@ class Product extends Controller{
     "productStatus",
     "catalogID"
     ];
+    private $absolutePath = "http://52.237.89.87/poly_project/";
 
     public function DefaultPage(): void
     {
@@ -211,9 +212,6 @@ class Product extends Controller{
         // Check Token
         $this->HandleTokenValidate();
 
-        // Get Absolute Path
-        $absolutePath = "https://52.237.89.87/poly_project/";
-
         // Check Empty Or Not
         if (!($productID)) {
             $this->response(400, ["code" => 400, "message" => "productID Can Not Be Empty"]);
@@ -228,7 +226,7 @@ class Product extends Controller{
         }
 
         // Get Absolute Path
-        $pathFileUpload = $absolutePath.$pathFileUpload;
+        $pathFileUpload = $this->absolutePath.$pathFileUpload;
 
         if ($this->LoadModel("ProductModel")->AddImageProduct($pathFileUpload, $productID)) {
             $this->response(200);
@@ -246,9 +244,6 @@ class Product extends Controller{
         // Check Token
         $this->HandleTokenValidate();
 
-        // Get Absolute Path
-        $newPathFileUpload = "https://52.237.89.87/poly_project/";
-
         // Delete Old Image
         $currentProductImg = $this->LoadModel("ProductModel")->GetImageProduct($productID)['productImg'];
         $fileUrl = str_replace("/poly_project/","", parse_url($currentProductImg, PHP_URL_PATH));
@@ -263,11 +258,12 @@ class Product extends Controller{
             $this->response(500, ['code' => 500, 'message' => 'Failed To Upload Img']);
         }
 
-        $res = $newPathFileUpload.$res;
+        $res = $this->absolutePath.$res;
         if ($this->LoadModel("ProductModel")->EditProduct($productID, ['productImg' => $res])) {
             $this->response(200);
         }
 
         $this->response(500);
     }
+
 }
