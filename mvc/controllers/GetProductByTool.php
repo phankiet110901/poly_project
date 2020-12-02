@@ -52,10 +52,6 @@ class GetProductByTool extends Controller
         $dataInsert['productStatus'] = false;
         $dataInsert['catalogID'] = "f3ab4f52-22a5-11eb-8822-309c23de2ee2";
         
-        // Get Name To Insert
-        $getCatalogName = $this->LoadModel("ProductModel")->CheckExistCatalog($dataInsert['catalogID']);
-        $dataInsert['catalogName'] = $getCatalogName;
-        
         // Get The Remaining Fields To Insert
         foreach($listFieldToAdd as $tableName)
         {

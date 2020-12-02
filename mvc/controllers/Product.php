@@ -87,17 +87,10 @@ class Product extends Controller{
 
         // Validate Data
         $this->ValidDataFromRequest($listFieldToAdd, $bodyContent);
-
-        $getCatalogName = $this->LoadModel("ProductModel")->CheckExistCatalog($bodyContent['catalogID']);
-        //Validate Catalog
-        if (!$getCatalogName) {
-            $this->response(400, ['code'=> 400, 'message' => 'invalid catalogID']);
-        }
         
         // Prepare Values To Insert
         $dataInsert = $bodyContent;
         $dataInsert['productID'] = genUUIDV4();
-        $dataInsert['catalogName'] = $getCatalogName;
         
         // Prepare to Insert
         if ($this->LoadModel("ProductModel")->AddProduct($dataInsert)) {
@@ -138,13 +131,6 @@ class Product extends Controller{
         $this->listTableName[10]
         ], $dataEdit);
 
-        $getCatalogName = $this->LoadModel("ProductModel")->CheckExistCatalog($dataEdit['catalogID']);
-        //Validate Catalog
-        if (!$getCatalogName) {
-            $this->response(400, ['code'=> 400, 'message' => 'invalid catalogID']);
-        }
-        $dataEdit['catalogName'] = $getCatalogName;
-        
         // Edit Product
         if ($this->LoadModel("ProductModel")->EditProduct($productID, $dataEdit)) {
             $this->response(200, ["message" => "Action Completely Successful"]);

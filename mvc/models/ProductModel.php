@@ -5,7 +5,7 @@ class ProductModel extends DBSql{
     // Get All Products
     public function GetAllProduct() : array
     {
-        return $this->SelectAll($this->tableName);
+        return $this->SearchQuery("SELECT product.*, product_catalog.catalogName as 'catalogName' FROM `product` INNER JOIN product_catalog ON product.catalogID = product_catalog.catalogID;");
     }
 
     // Select One Product
