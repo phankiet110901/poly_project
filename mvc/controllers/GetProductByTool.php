@@ -47,13 +47,16 @@ class GetProductByTool extends Controller
 
         // Prepare Values TO Insert
         $dataInsert[$fieldID] = genUUIDV4();
-        $dataInsert['catalogID'] = json_encode([
-            "catalogID" => "f3ab4f52-22a5-11eb-8822-309c23de2ee2",
-            "catalogName" => "Man"]);
         $dataInsert['productDiscount'] = 0;
         $dataInsert['productQuantity'] = 1;
         $dataInsert['productStatus'] = false;
+        $dataInsert['catalogID'] = "f3ab4f52-22a5-11eb-8822-309c23de2ee2";
         
+        // Get Name To Insert
+        $getCatalogName = $this->LoadModel("ProductModel")->CheckExistCatalog($dataInsert['catalogID']);
+        $dataInsert['catalogName'] = $getCatalogName;
+        
+        // Get The Remaining Fields To Insert
         foreach($listFieldToAdd as $tableName)
         {
             $dataInsert[$tableName] = $bodyContent[$tableName];
@@ -68,6 +71,7 @@ class GetProductByTool extends Controller
             $this->response(400, ["code" => 400, "message" => "Data Invalid"]);
         }        
 
+        $this->response(500);
     }
 }
 ?>

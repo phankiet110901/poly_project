@@ -130,10 +130,7 @@ class Comment extends Controller{
         if ($this->LoadModel("CommentModel")->DeleteComment($commentID)) {
              $this->response(201, ["code" => 201, "message" => "Action Completely Successful"]);
         }
-        else
-        {
-            $this->response(400, ["code" => 400, "message" => "You must remove product comment"]);
-        }
+        
         $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
     }
 }
