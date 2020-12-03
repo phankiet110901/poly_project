@@ -14,7 +14,7 @@ class CommentModel extends DBSql{
     // Get All Comment By Product
     public function GetCommentProduct($productID): array
     {
-        return $this->SelectAllCondition($this->tableName, ["productID" => $productID]);
+        return $this->SelectCondition($this->tableName, ['userID', 'commentText'], ['productID' => $productID]);
     }
 
     // Delete Comment
@@ -44,6 +44,14 @@ class CommentModel extends DBSql{
         return true;
     }
 
-}
+    public function GetProductField(string $productID) : array
+    {
+        return $this->SelectCondition('product',['productID', 'productName', 'productPrice'], ['productID' => $productID]);
+    }
 
+    public function GetAllProduct(): array
+    {
+        return $this->Select('product', ['productID', 'productName', 'productPrice']);
+    }
+}
 ?>

@@ -120,13 +120,13 @@ abstract class Controller
         return true;
     }
 
-    protected function HandleTokenValidate(): void
+    protected function HandleTokenValidate(): object
     {
         $headerReq = $this->getDataFromHeader();
         if (!isset($headerReq['Authorization'])) {
             $this->response(401);
         }
-
+        $token = new stdClass();
         // decode token
         try {
             $token = JWT::decode($headerReq['Authorization'], $this->secretKey);
@@ -151,6 +151,8 @@ abstract class Controller
         if (!$this->Auth("user", ['userID' => $token->userID])) {
             $this->response(401, ['code' => 401, 'message' => 'Invalid Token']);
         }
+
+        return $token;
     }
 
     protected function UploadImg(string $folderUploadName, array $fileInfo, string $nameProperty): string

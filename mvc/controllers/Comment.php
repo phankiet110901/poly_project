@@ -1,5 +1,5 @@
 <?php
-
+use core\JWT;
 class Comment extends Controller{
 
     // Properties Of Comment
@@ -19,7 +19,16 @@ class Comment extends Controller{
 
     public function SelectAllComment(): void
     {
-        $this->response(200, $this->LoadModel("CommentModel")->GetAllComment());
+        $data = $this->LoadModel('CommentModel')->GetAllProduct();
+
+        // // Loop to Find Comment By Product
+        // foreach($data as $key)
+        // {
+        //     $key['comment'] = array();
+        //     $dataComment = $this->LoadModel("CommentModel")->GetCommentProduct($key['productID']);
+        //     array_push($key['comment'], $dataComment);
+        // }
+        // $this->response(200, $data);
     }
 
     public function SelectCommentProduct(string $productID = null): void
@@ -33,8 +42,13 @@ class Comment extends Controller{
         if (!($this->LoadModel("ProductModel")->CheckExistProduct($productID))) {
              $this->response(400, ["code" => 400, "message" => "productID Invalid"]);
         }
+        $data = $this->LoadModel("CommentModel")->GetProductField($productID);
+        $comment = $this->LoadModel("CommentModel")->GetCommentProduct($productID);
+        // Set Comment For Product
+        $data[0]['comment'] = $comment;
 
-        $this->response(200, $this->LoadModel("CommentModel")->GetCommentProduct($productID));
+        // Respond Data
+        $this->response(200, $data);
     }
 
     public function AddComment(): void
@@ -43,7 +57,17 @@ class Comment extends Controller{
         $this->handleWrongMethod("POST");
 
         // Check Token
-        $this->HandleTokenValidate();
+        $token = $this->HandleTokenValidate();
+
+        // Read Data From Body
+        $bodyContent = $this->GetDataFromBody();
+                        
+        // Get userID From Token
+        $userID = $token->userID;
+
+        array_splice($bodyContent, -1, 1);
+
+        $bodyContent['userID'] = $userID;
 
         // Get Table To Add
         $listFieldToAdd = [
@@ -53,14 +77,14 @@ class Comment extends Controller{
         ];
         $fieldID = $this->listTableName[0];
 
-        // Read Data From Body
-        $bodyContent = $this->GetDataFromBody();
 
         // Valid Data
         $this->ValidDataFromRequest($listFieldToAdd, $bodyContent);
 
+
         // Prepare Values To Insert
         $dataInsert[$fieldID] = genUUIDV4();
+
         foreach ($listFieldToAdd as $tableName) {
             $dataInsert[$tableName] = $bodyContent[$tableName];
         }
