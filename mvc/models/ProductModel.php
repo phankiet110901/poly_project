@@ -96,6 +96,13 @@ class ProductModel extends DBSql{
         return $dataFromDB['catalogName'];
     }
 
+    public function CountProduct(): int
+    {
+        return $this->CountWithoutCondition($this->tableName);
+    }
 
+    public function SelectProductPage(int $start, int $end): array{
+        return $this->SelectWithLimit($this->tableName, [$start => $end]);
+    }
 }
 ?>

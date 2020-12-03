@@ -235,4 +235,34 @@ class DBSql
         return $this->conn->Query($sql)->fetch_assoc()["total"];
     }
 
+    public function CountWithoutCondition(string $tableName): int
+    {
+        $sql = "SELECT count(*) as total FROM ${tableName}";
+
+        return $this->conn->Query($sql)->fetch_assoc()["total"];
+    }
+
+    public function SelectWithLimit(string $tableName, array $size) : array
+    {
+        // Get Condition
+        $start = "";
+        $end = "";
+        
+        foreach($size as $key => $value)
+        {
+            $start = $key;
+            $end = $value;
+        }
+        
+        $sql = "SELECT * FROM `$tableName` LIMIT $start, $end";
+        $res = $this->conn->Query($sql);
+        
+        $dataOutput = [];
+        
+        while ($rows = $res->fetch_assoc()) {
+            array_push($dataOutput, $rows);
+        }
+        return $dataOutput;        
+    }
+
 }

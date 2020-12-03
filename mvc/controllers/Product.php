@@ -252,4 +252,24 @@ class Product extends Controller{
         $this->response(500);
     }
 
+    public function Page(int $page = 1, int $size = 5): void
+    {
+        $totalProduct = $this->LoadModel("ProductModel")->CountProduct(); //Total Product Inside DB
+
+        $totalPage = ceil($totalProduct / $size);
+
+        $start = ($page * $size) - $size;
+
+        $data = $this->LoadModel("ProductModel")->SelectProductPage($start, $size);
+
+        $response = array(
+            "CurrentPage" => $page,
+            "TotalPage" => $totalPage,
+            'TotalProduct' => $totalProduct,
+            'Data' => $data
+        );     
+
+        $this->response(200, $response);
+
+    }
 }
