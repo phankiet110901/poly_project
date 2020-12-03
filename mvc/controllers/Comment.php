@@ -21,14 +21,15 @@ class Comment extends Controller{
     {
         $data = $this->LoadModel('CommentModel')->GetAllProduct();
 
-        // // Loop to Find Comment By Product
-        // foreach($data as $key)
-        // {
-        //     $key['comment'] = array();
-        //     $dataComment = $this->LoadModel("CommentModel")->GetCommentProduct($key['productID']);
-        //     array_push($key['comment'], $dataComment);
-        // }
-        // $this->response(200, $data);
+        
+        foreach ($data as $key => $value) {
+            // Get Product Comment
+            $comment = $this->LoadModel("CommentModel")->GetCommentProduct($value['productID']);
+
+            $data[$key]['comment'] = $comment;
+        }
+
+        $this->response(200, $data);
     }
 
     public function SelectCommentProduct(string $productID = null): void
@@ -42,8 +43,13 @@ class Comment extends Controller{
         if (!($this->LoadModel("ProductModel")->CheckExistProduct($productID))) {
              $this->response(400, ["code" => 400, "message" => "productID Invalid"]);
         }
+
+        //Get ProductData 
         $data = $this->LoadModel("CommentModel")->GetProductField($productID);
+
+        // Get Comment Related To Product
         $comment = $this->LoadModel("CommentModel")->GetCommentProduct($productID);
+
         // Set Comment For Product
         $data[0]['comment'] = $comment;
 
@@ -65,9 +71,12 @@ class Comment extends Controller{
         // Get userID From Token
         $userID = $token->userID;
 
-        array_splice($bodyContent, -1, 1);
-
         $bodyContent['userID'] = $userID;
+
+        // Check Valid ProductID
+        if (!($this->LoadModel("ProductModel")->CheckExistProduct($bodyContent['productID']))) {
+            $this->response(400, ['code'=>400, 'message'=>'productID Invalid']);
+        }
 
         // Get Table To Add
         $listFieldToAdd = [
@@ -77,10 +86,8 @@ class Comment extends Controller{
         ];
         $fieldID = $this->listTableName[0];
 
-
         // Valid Data
         $this->ValidDataFromRequest($listFieldToAdd, $bodyContent);
-
 
         // Prepare Values To Insert
         $dataInsert[$fieldID] = genUUIDV4();
