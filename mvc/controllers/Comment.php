@@ -104,6 +104,8 @@ class Comment extends Controller{
         {
             $this->response(400, ["code" => 400, "message" => "Data Invalid"]);
         }        
+
+        $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
     }
 
     public function EditComment(string $commentID = null): void
@@ -136,6 +138,8 @@ class Comment extends Controller{
         } else {
             $this->response(400, ["code" => 400, "message" => "Data Invalid"]);
         }
+
+        $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
         
     }
 

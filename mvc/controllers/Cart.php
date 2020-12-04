@@ -47,10 +47,8 @@ class Cart extends Controller
         if ($this->LoadModel("CartModel")->DeleteCart($cartID)) {
             $this->response(201, ["code" => 201, "message" => "Action Completely Successful"]);
         }
-        else
-        {
-            $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
-        }
+        
+        $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
     }
 
     public function ChangeCartStatus(string $cartID = null): void
@@ -75,8 +73,8 @@ class Cart extends Controller
         {
             $this->response(200, ['code' => 200, 'message'=> 'Update Completed']);
         }
-        
-        $this->response(500);
+
+        $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
     }
 
     public function AddCart(string $userID = null): void
@@ -119,6 +117,8 @@ class Cart extends Controller
         {
             $this->response(400, ["code" => 400, "message" => "Data Invalid"]);
         }
+
+        $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
     }
 
 

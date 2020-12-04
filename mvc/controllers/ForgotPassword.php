@@ -73,8 +73,7 @@ class ForgotPassword extends Controller
             $this->response(400, ["code" => 400, "message" => "Error Invalid"]);
         }
 
-        
-        
+        $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
     }
 }
 

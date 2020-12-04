@@ -163,7 +163,7 @@ class Product extends Controller{
 			$this->response(200, ['code'=>200, 'message'=>'Update Completed']);
 		}
 		
-		$this->response(500);
+        $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
     }
 
     public function DeleteProduct(string $productID = null): void
@@ -230,7 +230,7 @@ class Product extends Controller{
             $this->response(200);
         }
 
-        $this->response(500);
+        $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
         
     }
 
