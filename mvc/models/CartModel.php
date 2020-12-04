@@ -4,6 +4,7 @@ class CartModel extends DBSql{
 
     // Table Name
     private $tableName = "cart";
+    private $subtableName = "cart_detail";
 
     // Get All Cart
     public function GetAllCart() : array
@@ -42,8 +43,12 @@ class CartModel extends DBSql{
         if (empty($res)) {
             return false;
         }
-        
         return true;
+    }
+
+    public function AddCartDetail(array $dataCart) : bool
+    {
+        return $this->Insert($this->subtableName, $dataCart);
     }
 }
 

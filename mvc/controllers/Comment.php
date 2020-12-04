@@ -140,7 +140,6 @@ class Comment extends Controller{
         }
 
         $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
-        
     }
 
     public function DeleteComment(string $commentID = null): void
