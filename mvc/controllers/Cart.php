@@ -80,26 +80,35 @@ class Cart extends Controller
         $this->handleWrongMethod("POST");
 
         // Check Token
-        $this->HandleTokenValidate();
+        $token = $this->HandleTokenValidate();
 
         // Get Table To Add
         $listTableToAdd = [
-            $this->listTableName[2],
-            $this->listTableName[3],
-            $this->listTableName[4],
-            $this->listTableName[5],
-            $this->listTableName[6],
+            $this->listTableName[2], // Name
+            $this->listTableName[3], // Address
+            $this->listTableName[4], // Telephone
+            $this->listTableName[5], // Email
+            $this->listTableName[6], // Total
+            $this->listTableName[8]  // userID
         ];
         $fieldID = $this->listTableName[0];
-        $fieldUserID = $this->listTableName[8];
 
         // Read Data From Body
         $bodyData = $this->GetDataFromBody();
+
+        // Get userID From Token
+        $userID = $token->userID;
+        $customerName = $token->name;
+
+        // Insert Value To bodyData
+        $bodyData['userID'] = $userID;
+        $bodyData['customerName'] = $customerName;
+
+        // Validate Data
         $this->ValidDataFromRequest($listTableToAdd, $bodyData);
 
         // Prepare Data to Insert
         $dataInsert[$fieldID] = genUUIDV4();
-        $dataInsert[$fieldUserID] = $userID;
         
         foreach($listTableToAdd as $tableName)
         {
