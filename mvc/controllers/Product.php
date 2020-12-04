@@ -158,7 +158,12 @@ class Product extends Controller{
             $this->response(400, ["code" => 400, "message" => "productID Invalid"]);
         }
 
-        $this->LoadModel("ProductModel")->UpdateStatus($productID);
+        if($this->LoadModel("ProductModel")->UpdateStatus($productID))
+		{
+			$this->response(200, ['code'=>200, 'message'=>'Update Completed']);
+		}
+		
+		$this->response(500);
     }
 
     public function DeleteProduct(string $productID = null): void
