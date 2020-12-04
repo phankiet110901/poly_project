@@ -94,7 +94,7 @@ class Product extends Controller{
         
         // Prepare to Insert
         if ($this->LoadModel("ProductModel")->AddProduct($dataInsert)) {
-            $this->response(201, ["code" => 201, "message" => "Action Completely Successful"]);
+            $this->response(201, ["code" => 201, "productID"=> $dataInsert['productID']]);
         }
 
         $this->response(500, ['code' => 500]);
