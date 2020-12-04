@@ -71,7 +71,12 @@ class Cart extends Controller
         }
 
         // Update Status
-        $this->LoadModel("CartModel")->UpdateStatus($cartID);
+        if($this->LoadModel("CartModel")->UpdateStatus($cartID))
+        {
+            $this->response(200, ['code' => 200, 'message'=> 'Update Completed']);
+        }
+        
+        $this->response(500);
     }
 
     public function AddCart(string $userID = null): void
