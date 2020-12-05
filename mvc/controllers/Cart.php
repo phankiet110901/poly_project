@@ -20,6 +20,7 @@ class Cart extends Controller
         "ID",
         "cartID",
         "productID",
+        "sizeName",
         "quantity"
     ];
 
@@ -161,6 +162,7 @@ class Cart extends Controller
             $this->listSubTable[1],
             $this->listSubTable[2],
             $this->listSubTable[3],
+            $this->listSubTable[4],
         ];
         $fieldID = $this->listSubTable[0];
         
@@ -172,10 +174,13 @@ class Cart extends Controller
             $bodyContent[$i]['cartID'] = $cartID;
             // Check Quantity And Product
             if (!($this->LoadModel("ProductModel")->CheckExistProduct($bodyContent[$i]['productID']))) {
-                $this->response(200, ['code' => 200 ,'message' => 'Invalid ProductID']); die();
+                $this->response(200, ['code' => 400 ,'message' => 'Invalid ProductID']); die();
             }
             if ($bodyContent[$i]['quantity'] < 1) {
-                $this->response(200, ['code' => 200, 'message' => 'Invalid Quantity']); die();
+                $this->response(200, ['code' => 400, 'message' => 'Invalid Quantity']); die();
+            }
+            if ($bodyContent[$i]['sizeName'] == "") {
+                $this->response(200, ['code' => 400, 'message' => 'Invalid Size']); die();
             }
             // Validate Data
             $this->ValidDataFromRequest($listTableToAdd, $bodyContent[$i]);
