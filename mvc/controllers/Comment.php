@@ -167,6 +167,33 @@ class Comment extends Controller{
         
         $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
     }
+
+    public function ChangeCommentStatus(string $commentID = null) : void
+    {
+        // Check Method
+        $this->handleWrongMethod("PUT");
+
+        // Check Token
+        $this->HandleTokenValidate();
+
+        // Check Empty Or Not
+        if (!($commentID)) {
+            $this->response(400, ["code" => 400, "message" => "productID Can Not Be Empty"]);
+        }
+
+        // Check Exist Or Not
+        if (!($this->LoadModel("CommentModel")->CheckExistComment($commentID))) {
+            $this->response(400, ["code" => 400, "message" => "productID Invalid"]);
+        }
+
+        if($this->LoadModel("CommentModel")->UpdateStatus($commentID))
+		{
+			$this->response(200, ['code'=>200, 'message'=>'Update Completed']);
+		}
+		
+        $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
+    }
+
 }
 
 ?>

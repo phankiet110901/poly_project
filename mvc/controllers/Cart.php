@@ -11,7 +11,7 @@ class Cart extends Controller
         "customerTelephone",
         "customerEmail",
         "cartTotal",
-        "cartStatus",
+        "cartS  tatus",
         "userID"
     ];
 

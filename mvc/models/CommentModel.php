@@ -44,6 +44,11 @@ class CommentModel extends DBSql{
         return true;
     }
 
+    public function UpdateStatus(string $commentID) : bool
+    {
+        return $this->CustomQuery("UPDATE comment SET commentStatus = (CASE WHEN commentStatus = 0 THEN 1 ELSE 0 END) WHERE commentID = '$commentID'");
+    }
+
     public function GetProductField(string $productID) : array
     {
         return $this->SelectCondition('product',['productID', 'productName', 'productPrice'], ['productID' => $productID]);
