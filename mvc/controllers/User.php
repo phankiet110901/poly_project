@@ -193,5 +193,10 @@ class User extends Controller
 
         $idUser = $token->userID;
 
+        // Check Exist User
+        if (!($this->LoadModel("UserModel")->CheckExistUser($idUser))) {
+            $this->response(400, ['code' => 400, 'message' => 'userID Invalid']);
+        }
+
     }
 }

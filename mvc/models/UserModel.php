@@ -33,6 +33,10 @@ class UserModel extends DBSql
         return $this->Update('user',['userAvatar' => $newAvatarUrl] , ['userID' => $idUser]);
     }
 
+    public function GetCartUser() : array
+    {
+    }
+
     public function CheckExistUser(string $userID) : bool
     {
         $dataFromDB = $this->SelectCondition($this->tableName, ["userID"], ["userID" => $userID]);

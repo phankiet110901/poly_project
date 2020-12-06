@@ -14,7 +14,7 @@ class CommentModel extends DBSql{
     // Get All Comment By Product
     public function GetCommentProduct($productID): array
     {
-        return $this->SearchQuery("SELECT comment.userID, user.name, comment.commentText FROM comment INNER JOIN user ON comment.userID = user.userID WHERE productID = '$productID'");
+        return $this->SearchQuery("SELECT comment.userID, user.userName ,user.name, comment.commentText FROM comment INNER JOIN user ON comment.userID = user.userID WHERE productID = '$productID'");
     }
 
     // Delete Comment
