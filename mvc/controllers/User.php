@@ -198,5 +198,8 @@ class User extends Controller
             $this->response(400, ['code' => 400, 'message' => 'userID Invalid']);
         }
 
+        $dataRes = $this->LoadModel("UserModel")->GetUserCart($idUser);
+
+        $this->response(200, $dataRes);
     }
 }

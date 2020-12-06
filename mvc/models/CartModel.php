@@ -42,6 +42,7 @@ class CartModel extends DBSql{
         return $this->CustomQuery("UPDATE cart SET cartStatus = (CASE WHEN cartStatus = 0 THEN 1 ELSE 0 END) WHERE cartID = '$cartID'");
     }
 
+
     public function CheckCartExist(string $cartID) : bool
     {
         $res = $this->SelectCondition($this->tableName, ["cartID"], ["cartID" => $cartID]);
