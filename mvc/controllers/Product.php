@@ -122,7 +122,8 @@ class Product extends Controller{
         $dataEdit = $this->GetDataFromBody();
 
         // Validate Data From Body
-        $this->ValidDataFromRequest([$this->listTableName[2],
+        $this->ValidDataFromRequest([
+        $this->listTableName[2],
         $this->listTableName[4],
         $this->listTableName[5],
         $this->listTableName[6],

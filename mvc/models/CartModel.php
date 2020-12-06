@@ -14,7 +14,12 @@ class CartModel extends DBSql{
 
     public function GetOneCart(string $cartID) : array
     {
-        return $this->SelectAllCondition($this->tableName, ["cartID" => $cartID]);
+        return $this->SelectCondition($this->tableName, ['cartID', 'customerName'], ['cartID' => $cartID]);
+    }
+
+    public function GetDetailCart(string $cartID) : array
+    {
+        return $this->SearchQuery("SELECT cart_detail.productID, product.productName, cart_detail.sizeName, cart_detail.quantity FROM `cart_detail` INNER JOIN product ON product.productID = cart_detail.productID WHERE cart_detail.cartID = '$cartID'");
     }
 
     public function AddCart(array $dataCart) : bool

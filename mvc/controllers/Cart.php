@@ -11,7 +11,7 @@ class Cart extends Controller
         "customerTelephone",
         "customerEmail",
         "cartTotal",
-        "cartS  tatus",
+        "cartStatus",
         "userID"
     ];
 
@@ -33,6 +33,27 @@ class Cart extends Controller
     public function SelectAllCart(): void
     {
         $this->response(200, $this->LoadModel("CartModel")->GetAllCart());
+    }
+
+    public function SelectCartDetail(string $cartID = null): void
+    {
+        // Check Empty
+        if (!($cartID)) {
+            $this->response(400, ['code' => 400, 'message' => 'cartID Can Not Be Empty']);
+        }
+
+        // Check Exist
+        if (!($this->LoadModel("CartModel")->CheckCartExist($cartID))) {
+            $this->response(400, ['code' => 400, 'message' => 'cartID Invalid']);
+        }
+
+        // Get carData
+        $data = $this->LoadModel("CartModel")->GetOneCart($cartID);
+
+        // Get cartDetail
+        $data[0]['data'] = $this->LoadModel("CartModel")->GetDetailCart($cartID);;
+
+        $this->response(200, $data);
     }
 
     public function DeleteCart(string $cartID = null): void
