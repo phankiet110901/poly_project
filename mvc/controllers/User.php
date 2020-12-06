@@ -186,4 +186,12 @@ class User extends Controller
         }
     }
 
+    public function GetUserCart() : void
+    {
+        // Check Token
+        $token = $this->HandleTokenValidate();
+
+        $idUser = $token->userID;
+
+    }
 }
