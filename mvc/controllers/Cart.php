@@ -32,7 +32,16 @@ class Cart extends Controller
 
     public function SelectAllCart(): void
     {
-        $this->response(200, $this->LoadModel("CartModel")->GetAllCart());
+        $data = $this->LoadModel("CartModel")->GetAllCart();
+
+        foreach($data as $key => $value)
+        {
+            $dataProduct = $this->LoadModel("CartModel")->GetDetailCart($value['cartID']);
+
+            $data[$key]['data'] = $dataProduct;
+        }
+
+        $this->response(200, $data);
     }
 
     public function SelectCartDetail(string $cartID = null): void
