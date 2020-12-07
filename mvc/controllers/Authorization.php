@@ -6,7 +6,7 @@ use core\JWT;
 class Authorization extends Controller
 {
     private $listField = ["userID", "userName", "userPassword", "name", "userEmail", "userAvatar", "userStatus", "roleName"];
-    private $absolutePath = "http://52.237.89.87/poly_project/";
+    private $absolutePath = "http://104.215.156.152/poly_project/";
 
 
     public function DefaultPage(): void
