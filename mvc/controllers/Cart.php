@@ -190,34 +190,63 @@ class Cart extends Controller
         // Read Data From Body
         $bodyContent = $this->GetDataFromBody();
 
-        // Loop Throught bodyContent To Validate
-        for ($i=0; $i < count($bodyContent); $i++) { 
-            $bodyContent[$i]['cartID'] = $cartID;
+        if(count($bodyContent) === 1)
+        {
+            // Add only 1 product
+            $bodyContent[0]['cartID'] = $cartID;
+
             // Check Quantity And Product
-            if (!($this->LoadModel("ProductModel")->CheckExistProduct($bodyContent[$i]['productID']))) {
-                $this->response(200, ['code' => 400 ,'message' => 'Invalid ProductID']); die();
+            if (!($this->LoadModel("ProductModel")->CheckExistProduct($bodyContent[0]['productID']))) {
+                $this->response(400, ['code' => 400 ,'message' => 'Invalid ProductID']); die();
             }
-            if ($bodyContent[$i]['quantity'] < 1) {
-                $this->response(200, ['code' => 400, 'message' => 'Invalid Quantity']); die();
+            if ($bodyContent[0]['quantity'] < 1) {
+                $this->response(400, ['code' => 400, 'message' => 'Invalid Quantity']); die();
             }
-            if ($bodyContent[$i]['sizeName'] == "") {
-                $this->response(200, ['code' => 400, 'message' => 'Invalid Size']); die();
+            if ($bodyContent[0]['sizeName'] == "") {
+                $this->response(400, ['code' => 400, 'message' => 'Invalid Size']); die();
             }
             // Validate Data
-            $this->ValidDataFromRequest($listTableToAdd, $bodyContent[$i]);
-        }
+            $this->ValidDataFromRequest($listTableToAdd, $bodyContent[0]);        
+            
+            // Insert ID
+            $bodyContent[0]['ID'] = genUUIDV4();
 
-        // Prepare Values To Insert
-        for ($i=0; $i < count($bodyContent); $i++) { 
-            $bodyContent[$i][$fieldID] = genUUIDV4();
-
-            if($this->LoadModel("CartModel")->AddCartDetail($bodyContent[$i]))
+            if($this->LoadModel("CartModel")->AddCartDetail($bodyContent[0]))
             {
                 $flag = true;
             }
             else $flag = false;
         }
+        else
+        {
+        // Loop Throught bodyContent To Validate
+            for ($i=0; $i < count($bodyContent); $i++) { 
+                $bodyContent[$i]['cartID'] = $cartID;
+                // Check Quantity And Product
+                if (!($this->LoadModel("ProductModel")->CheckExistProduct($bodyContent[$i]['productID']))) {
+                    $this->response(400, ['code' => 400 ,'message' => 'Invalid ProductID']); die();
+                }
+                if ($bodyContent[$i]['quantity'] < 1) {
+                    $this->response(400, ['code' => 400, 'message' => 'Invalid Quantity']); die();
+                }
+                if ($bodyContent[$i]['sizeName'] == "") {
+                    $this->response(400, ['code' => 400, 'message' => 'Invalid Size']); die();
+                }
+                // Validate Data
+                $this->ValidDataFromRequest($listTableToAdd, $bodyContent[$i]);
+            }
 
+            // Prepare Values To Insert
+            for ($i=0; $i < count($bodyContent); $i++) { 
+                $bodyContent[$i][$fieldID] = genUUIDV4();
+
+                if($this->LoadModel("CartModel")->AddCartDetail($bodyContent[$i]))
+                {
+                    $flag = true;
+                }
+                else $flag = false;
+            }
+        }
         // Check
         ($flag === true) ? $this->response(201, ['code' => 201, 'message' => 'Insert Completed']) : $this->response(400, ['code' => 400, 'message' => 'Error During Insert']);
        
