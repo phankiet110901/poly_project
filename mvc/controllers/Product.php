@@ -139,7 +139,6 @@ class Product extends Controller{
         $this->listTableName[5],
         $this->listTableName[6],
         $this->listTableName[7],
-        $this->listTableName[8],
         $this->listTableName[10]
         ], $dataEdit);
 
