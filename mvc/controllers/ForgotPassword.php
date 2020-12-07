@@ -43,34 +43,30 @@ class ForgotPassword extends Controller
 
         // Update Password And Send Mail
         if ($this->LoadModel("ForgotPasswordModel")->ResetPassword($userID, $dataEdit)) {
-
-            // Sending Mail
-            try {
-                //Server settings
-                $mail->SMTPDebug = SMTP::DEBUG_SERVER;// Enable verbose debug output
-                $mail->isSMTP();// gửi mail SMTP
-                $mail->Host = 'smtp.gmail.com';// Set the SMTP server to send through
-                $mail->SMTPAuth = true;// Enable SMTP authentication
-                $mail->Username = 'johhnysinstest@gmail.com';// SMTP username
-                $mail->Password = '5154325a'; // SMTP password
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;// Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
-                $mail->Port = 587; // TCP port to connect to
-                //Recipients
-                $mail->setFrom('RyderShop@gmail.com', 'Ryder Customer Services System');
-                $mail->addAddress($bodyContent['userEmail'], 'Dear Our Customer'); // Add a recipient
-                // Content
-                $mail->isHTML(true);   // Set email format to HTML
-                $mail->Subject = 'Your Reset Password Request';
-                $mail->Body = $messageSend;
-                $mail->AltBody = $messageSend;
-                $mail->send();
-            } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            //Server settings
+            $mail->SMTPDebug = SMTP::DEBUG_SERVER;// Enable verbose debug output
+            $mail->isSMTP();// gửi mail SMTP
+            $mail->Host = 'smtp.gmail.com';// Set the SMTP server to send through
+            $mail->SMTPAuth = true;// Enable SMTP authentication
+            $mail->Username = 'johhnysinstest@gmail.com';// SMTP username
+            $mail->Password = '5154325a'; // SMTP password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;// Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
+            $mail->Port = 587; // TCP port to connect to
+            //Recipients
+            $mail->setFrom('RyderShop@gmail.com', 'Ryder Customer Services System');
+            $mail->addAddress($bodyContent['userEmail'], 'Dear Our Customer'); // Add a recipient
+             // Content
+            $mail->isHTML(true);   // Set email format to HTML
+            $mail->Subject = 'Your Reset Password Request';
+            $mail->Body = $messageSend;
+            $result = $mail->send();
+            if ($result) {
+                $this->response(200, ['code' => 200, 'message' => 'Send completed']);
             }
         }
         else
         {
-            $this->response(400, ["code" => 400, "message" => "Error Invalid"]);
+            $this->response(400, ["code" => 400, "message" => "Error, Can't Not Send Mail"]);
         }
 
         $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
