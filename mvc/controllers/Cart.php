@@ -73,7 +73,7 @@ class Cart extends Controller
         $data = $this->LoadModel("CartModel")->GetOneCart($cartID);
 
         // Get cartDetail
-        $data[0]['data'] = $this->LoadModel("CartModel")->GetDetailCart($cartID);;
+        $data[0]['data'] = $this->LoadModel("CartModel")->GetDetailCart($cartID);
 
         $this->response(200, $data);
     }
