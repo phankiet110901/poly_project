@@ -86,7 +86,7 @@ abstract class Controller
 
         // check values
         foreach ($listTableForAdd as $tableName) {
-            if ($dataFromRequest[$tableName] == "")) {
+            if ($dataFromRequest[$tableName] == "") {
                 $this->response(400, ["code" => 400, "message" => "Data Can Not Empty"]);
             }
         }

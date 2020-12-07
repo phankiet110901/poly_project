@@ -17,7 +17,7 @@ class ProductModel extends DBSql{
     //Select Most View Product
     public function GetFamousProduct() : array
     {
-        return $this->SearchQuery("SELECT product.*, product_catalog.catalogName as 'catalogName' FROM `product` INNER JOIN product_catalog ON product.catalogID = product_catalog.catalogID ORDER BY `productView` DESC;");
+        return $this->SearchQuery("SELECT product.*, product_catalog.catalogName as 'catalogName' FROM `product` INNER JOIN product_catalog ON product.catalogID = product_catalog.catalogID ORDER BY `productView` DESC LIMIT 10;");
     }
 
     // Select Product By Catalog
