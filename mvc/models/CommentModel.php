@@ -14,7 +14,7 @@ class CommentModel extends DBSql{
     // Get All Comment By Product
     public function GetCommentProduct($productID): array
     {
-        return $this->SelectCondition($this->tableName, ['userID', 'commentText'], ['productID' => $productID]);
+        return $this->SearchQuery("SELECT comment.userID, user.userName ,user.name, comment.commentText FROM comment INNER JOIN user ON comment.userID = user.userID WHERE productID = '$productID'");
     }
 
     // Delete Comment
@@ -42,6 +42,11 @@ class CommentModel extends DBSql{
             return false;
         }
         return true;
+    }
+
+    public function UpdateStatus(string $commentID) : bool
+    {
+        return $this->CustomQuery("UPDATE comment SET commentStatus = (CASE WHEN commentStatus = 0 THEN 1 ELSE 0 END) WHERE commentID = '$commentID'");
     }
 
     public function GetProductField(string $productID) : array

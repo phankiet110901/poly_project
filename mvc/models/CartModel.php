@@ -4,6 +4,7 @@ class CartModel extends DBSql{
 
     // Table Name
     private $tableName = "cart";
+    private $subtableName = "cart_detail";
 
     // Get All Cart
     public function GetAllCart() : array
@@ -13,7 +14,12 @@ class CartModel extends DBSql{
 
     public function GetOneCart(string $cartID) : array
     {
-        return $this->SelectAllCondition($this->tableName, ["cartID" => $cartID]);
+        return $this->SelectCondition($this->tableName, ['cartID', 'customerName'], ['cartID' => $cartID]);
+    }
+
+    public function GetDetailCart(string $cartID) : array
+    {
+        return $this->SearchQuery("SELECT cart_detail.productID, product.productName, cart_detail.sizeName, cart_detail.quantity FROM `cart_detail` INNER JOIN product ON product.productID = cart_detail.productID WHERE cart_detail.cartID = '$cartID'");
     }
 
     public function AddCart(array $dataCart) : bool
@@ -36,14 +42,19 @@ class CartModel extends DBSql{
         return $this->CustomQuery("UPDATE cart SET cartStatus = (CASE WHEN cartStatus = 0 THEN 1 ELSE 0 END) WHERE cartID = '$cartID'");
     }
 
+
     public function CheckCartExist(string $cartID) : bool
     {
         $res = $this->SelectCondition($this->tableName, ["cartID"], ["cartID" => $cartID]);
         if (empty($res)) {
             return false;
         }
-        
         return true;
+    }
+
+    public function AddCartDetail(array $dataCart) : bool
+    {
+        return $this->Insert($this->subtableName, $dataCart);
     }
 }
 

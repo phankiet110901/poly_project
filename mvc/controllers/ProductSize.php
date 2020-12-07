@@ -42,10 +42,8 @@ class ProductSize extends Controller{
         if ($this->LoadModel("ProductSizeModel")->DeleteSize($sizeID)) {
             $this->response(201, ["code" => 201, "message" => "Action Completely Successful"]);
         }
-        else
-        {
-            $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
-        }        
+
+        $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
 
     }
 
@@ -83,6 +81,8 @@ class ProductSize extends Controller{
         {
             $this->response(400, ["code" => 400, "message" => "Data Invalid"]);
         }
+
+        $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
     }
 
     public function EditSize(string $sizeID = null): void

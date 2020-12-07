@@ -33,9 +33,14 @@ class UserModel extends DBSql
         return $this->Update('user',['userAvatar' => $newAvatarUrl] , ['userID' => $idUser]);
     }
 
+    public function GetUserCart(string $userID) : array
+    {
+        return $this->SelectCondition('cart', ['cartID', 'cartDate', 'customerAddress', 'cartTotal', 'cartStatus'], ['userID' => $userID]);
+    }
+
     public function CheckExistUser(string $userID) : bool
     {
-        $dataFromDB = $this->SelectCondition($this->tableName, ["userID"], ["userID" => $userID]);
+        $dataFromDB = $this->SelectCondition('user', ["userID"], ["userID" => $userID]);
 
         if (empty($dataFromDB)) {
             return false;

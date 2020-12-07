@@ -186,4 +186,20 @@ class User extends Controller
         }
     }
 
+    public function GetUserCart() : void
+    {
+        // Check Token
+        $token = $this->HandleTokenValidate();
+
+        $idUser = $token->userID;
+
+        // Check Exist User
+        if (!($this->LoadModel("UserModel")->CheckExistUser($idUser))) {
+            $this->response(400, ['code' => 400, 'message' => 'userID Invalid']);
+        }
+
+        $dataRes = $this->LoadModel("UserModel")->GetUserCart($idUser);
+
+        $this->response(200, $dataRes);
+    }
 }
