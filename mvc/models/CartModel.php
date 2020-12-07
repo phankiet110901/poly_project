@@ -19,7 +19,7 @@ class CartModel extends DBSql{
 
     public function GetDetailCart(string $cartID) : array
     {
-        return $this->SearchQuery("SELECT cart_detail.productID, product.productName, cart_detail.sizeName, cart_detail.quantity FROM `cart_detail` INNER JOIN product ON product.productID = cart_detail.productID WHERE cart_detail.cartID = '$cartID'");
+        return $this->SearchQuery("SELECT cart_detail.productID, product.productName, cart_detail.sizeName, cart_detail.quantity, (cart_detail.quantity * product.productPrice) AS 'totalPrice' FROM `cart_detail` INNER JOIN product ON product.productID = cart_detail.productID WHERE cart_detail.cartID = '$cartID'");
     }
 
     public function AddCart(array $dataCart) : bool
