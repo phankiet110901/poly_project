@@ -83,7 +83,7 @@ class Cart extends Controller
         }
 
         // Delete
-        if ($this->LoadModel("CartModel")->DeleteCart($cartID)) {
+        if ($this->LoadModel("CartModel")->DeleteCart($cartID) && $this->LoadModel("CartModel")->DeleteCartDetail($cartID)) {
             $this->response(201, ["code" => 201, "message" => "Action Completely Successful"]);
         }
         

@@ -37,6 +37,11 @@ class CartModel extends DBSql{
         return $this->Delete($this->tableName, ["cartID" => $cartID]);
     }
 
+    public function DeleteCartDetail(string $cartID) : bool
+    {
+        return $this->Delete($this->subtableName, ["cartID" => $cartID]);
+    }
+
     public function UpdateStatus(string $cartID) : bool
     {
         return $this->CustomQuery("UPDATE cart SET cartStatus = (CASE WHEN cartStatus = 0 THEN 1 ELSE 0 END) WHERE cartID = '$cartID'");
