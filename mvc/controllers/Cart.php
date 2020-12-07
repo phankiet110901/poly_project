@@ -44,6 +44,20 @@ class Cart extends Controller
         $this->response(200, $data);
     }
 
+    public function SelectRecentCart(): void
+    {
+        $data = $this->LoadModel("CartModel")->GetRecentCart();
+
+        foreach($data as $key => $value)
+        {
+            $dataProduct = $this->LoadModel("CartModel")->GetDetailCart($value['cartID']);
+
+            $data[$key]['data'] = $dataProduct;
+        }
+
+        $this->response(200, $data);
+    }
+
     public function SelectCartDetail(string $cartID = null): void
     {
         // Check Empty

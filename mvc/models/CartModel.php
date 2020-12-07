@@ -11,6 +11,11 @@ class CartModel extends DBSql{
     {
         return $this->SelectAll($this->tableName);
     }
+    
+    public function GetRecentCart() : array
+    {
+        return $this->SearchQuery("SELECT * FROM cart WHERE `cartDate` >= CURDATE()");
+    }
 
     public function GetOneCart(string $cartID) : array
     {
@@ -46,7 +51,6 @@ class CartModel extends DBSql{
     {
         return $this->CustomQuery("UPDATE cart SET cartStatus = (CASE WHEN cartStatus = 0 THEN 1 ELSE 0 END) WHERE cartID = '$cartID'");
     }
-
 
     public function CheckCartExist(string $cartID) : bool
     {

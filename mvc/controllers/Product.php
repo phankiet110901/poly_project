@@ -28,6 +28,16 @@ class Product extends Controller{
         $this->response(200, $this->LoadModel("ProductModel")->GetAllProduct());
     }
 
+    public function SelectProductOnLow() : void
+    {
+        $this->response(200, $this->LoadModel("ProductModel")->GetLowQuantityProduct());
+    }
+
+    public function SelectFamousProduct() : void
+    {
+        $this->response(200, $this->LoadModel("ProductModel")->GetFamousProduct()))
+    }
+
     public function SelectOneProduct(string $productID = null): void
     {
         // Check Empty Or Not
@@ -43,6 +53,7 @@ class Product extends Controller{
 
         // Select One Product
         $this->LoadModel("ProductModel")->IncreaseView($productID);
+        
         $this->response(200, $this->LoadModel("ProductModel")->GetOneProduct($productID));
 
     }

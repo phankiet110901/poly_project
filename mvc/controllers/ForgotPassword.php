@@ -1,7 +1,10 @@
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\SMTP;
+
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: X-Requested-With");
+header("Content-Type: text/html; charset=UTF-8");
 
 class ForgotPassword extends Controller
 {
@@ -44,7 +47,7 @@ class ForgotPassword extends Controller
         // Update Password And Send Mail
         if ($this->LoadModel("ForgotPasswordModel")->ResetPassword($userID, $dataEdit)) {
             //Server settings
-            $mail->SMTPDebug = SMTP::DEBUG_SERVER;// Enable verbose debug output
+            $mail->SMTPDebug = 2;
             $mail->isSMTP();// gửi mail SMTP
             $mail->Host = 'smtp.gmail.com';// Set the SMTP server to send through
             $mail->SMTPAuth = true;// Enable SMTP authentication
@@ -59,9 +62,12 @@ class ForgotPassword extends Controller
             $mail->isHTML(true);   // Set email format to HTML
             $mail->Subject = 'Your Reset Password Request';
             $mail->Body = $messageSend;
-            $result = $mail->send();
-            if ($result) {
-                $this->response(200, ['code' => 200, 'message' => 'Send completed']);
+            try
+            {
+                $mail->send();
+            }
+            catch (Exception $e) {
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
         }
         else

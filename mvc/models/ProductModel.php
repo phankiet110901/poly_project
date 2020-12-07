@@ -14,10 +14,22 @@ class ProductModel extends DBSql{
         return $this->SelectAllCondition($this->tableName, ["productID" => $productID]);
     }
 
+    //Select Most View Product
+    public function GetFamousProduct() : array
+    {
+        return $this->SearchQuery("SELECT product.*, product_catalog.catalogName as 'catalogName' FROM `product` INNER JOIN product_catalog ON product.catalogID = product_catalog.catalogID ORDER BY `productView` DESC;");
+    }
+
     // Select Product By Catalog
     public function GetProductByCatalog(string $catalogID) :array
     {
         return $this->SelectAllCondition($this->tableName, ["catalogID" => $catalogID]);
+    }
+
+    // Get Low Quantity Product
+    public function GetLowQuantityProduct() : array
+    {
+        return $this->SearchQuery("SELECT product.*, product_catalog.catalogName as 'catalogName' FROM `product` INNER JOIN product_catalog ON product.catalogID = product_catalog.catalogID WHERE product.productQuantity < 10;");
     }
 
     // Add New Product
@@ -25,6 +37,7 @@ class ProductModel extends DBSql{
     {
         return $this->Insert($this->tableName, $dataProduct);
     }
+
 
     // Edit Product
     public function EditProduct(string $productID, array $dataEdit): bool
