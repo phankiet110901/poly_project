@@ -23,6 +23,11 @@ class UserModel extends DBSql
         return $this->SelectCondition('user',['userAvatar'],['userID' => $idUser])[0];
     }
 
+    public function GetPasswordUser(string $idUser) : array
+    {
+        return $this->SelectCondition('user', ['userPassword'], ['userID' => $idUser])[0];
+    }
+
     public function UpdateRoleForUser(string $idUser, bool $newStatus) : bool
     {
         return $this->Update('user', ['userStatus' => $newStatus], ['userID' => $idUser]);

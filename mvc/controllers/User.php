@@ -147,43 +147,65 @@ class User extends Controller
         $this->response(500);
     }
 
-    public function ChangePassword(string $idUser = null): void
+    public function ChangePassword(): void
     {
         // Check Method
         $this->handleWrongMethod("PUT");
 
         // Check Token
-        $this->HandleTokenValidate();
+        $token = $this->HandleTokenValidate();
 
-        // Check Empty Or Not
-        if(!$idUser)
-        {
-            $this->response(400, ["code" => "userID Can Not Be Empty"]);
-        }
+        // Get userID From Token
+        $userID = $token->userID;
 
         // Check exist
-        if (!$this->Auth('user', ['userID' => $idUser])) {
+        if (!$this->Auth('user', ['userID' => $userID])) {
             $this->response(400, ['code' => 400, 'message' => 'UserID InValid']);
         }
 
         // Read Edit Data From Body
-        $dataEdit = $this->GetDataFromBody();
+        $bodyData = $this->GetDataFromBody();
 
-        // Validate Data From Body
-        $this->ValidDataFromRequest([$this->listField[2]], $dataEdit);
-
-        // Decrypt New Password
-        $newPassword = $this->encodeBcryptString($dataEdit['userPassword']);
-        $dataEdit["userPassword"] = $newPassword;
-
-        // Change Password
-        if ($this->LoadModel("UserModel")->EditUser($dataEdit, $idUser)) {
-            $this->response(200, ["code" => 200, "message" => "Update Password Completed"]);
+        if (count($bodyData) === 0) {
+            $this->response(400, ['code' => 400, 'message' => "Data Empty"]);
         }
         else
         {
-            $this->response(500);
+            $currentPassword = preg_replace('/\s+/','', trim($bodyData['currentPassword']));
+            $newPassword = preg_replace('/\s+/','', trim($bodyData['newPassword']));
+            $repeatNewPassword = preg_replace('/\s+/','', trim($bodyData['repeatNewPassword']));
+
+            $passwordFromDB = $this->LoadModel("UserModel")->GetPasswordUser($userID)['userPassword'];
+            
+            // Check Password From DB
+            if(!(password_verify($currentPassword, $passwordFromDB)))
+            {
+                $this->response(400, ['code' => 400, 'message' => 'PASSWORD DOES NOT MATCH']);
+            }
+
+            if ($newPassword != $repeatNewPassword) {
+                $this->response(400, ['code' => 400, 'message' => "NEW PASSWORD DOES NOT MATCH WITH REPEAT PASSWORD"]);
+            }
+
+            $newPassword = $this->encodeBcryptString($newPassword);
+
+            $dataEdit['userPassword'] = $newPassword;
+
+            // Validate Data From Body
+            $this->ValidDataFromRequest([$this->listField[2]], $dataEdit);
+
+            // Change Password
+            if ($this->LoadModel("UserModel")->EditUser($dataEdit, $userID)) {
+                $this->response(200, ["code" => 200, "message" => "Update Password Completed"]);
+            }
+            else
+            {
+                $this->response(500, ["code" => 400, "message" => "Error, Can't Update Password"]);
+            }
         }
+
+        // Callback ON BackEnd
+        $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
     }
 
     public function GetUserCart() : void

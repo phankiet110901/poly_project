@@ -44,7 +44,7 @@ class DBSql
         }
 
         $sql = "SELECT * FROM `$tableName` WHERE `$keySql` = '$valueSql'";
-        $res = $this->conn->Query($sql);
+        $res = $this->conn->Query($sql) or die($this->conn->error);
 
         $dataOutput = [];
 

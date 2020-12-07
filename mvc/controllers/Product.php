@@ -97,7 +97,7 @@ class Product extends Controller{
             $this->response(201, ["code" => 201, "productID"=> $dataInsert['productID']]);
         }
 
-        $this->response(500, ['code' => 500]);
+        $this->response(500, ["code" => 500, "message" => "500 Internal Server"]);
     }
 
     public function EditProduct(string $productID = null): void

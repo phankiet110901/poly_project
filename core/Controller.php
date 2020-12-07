@@ -3,8 +3,6 @@
 use core\JWT;
 
 require "core/jwt.php";
-
-
 abstract class Controller
 {
     private $modelUrl = "./mvc/models/";
