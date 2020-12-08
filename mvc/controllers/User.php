@@ -61,12 +61,14 @@ class User extends Controller
 
     }
 
-    public function EditUserAvatar(string $idUser): void
+    public function EditUserAvatar(): void
     {
         $this->handleWrongMethod('POST');
-        $this->HandleTokenValidate();
 
+        $token = $this->HandleTokenValidate();
 
+        $idUser = $token->userID;
+        
         if (!$this->Auth('user', ['userID' => $idUser])) {
             $this->response(400, ['code' => 400, 'message' => 'ID Invalid']);
         }
