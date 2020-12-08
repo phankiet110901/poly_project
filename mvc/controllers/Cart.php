@@ -107,7 +107,8 @@ class Cart extends Controller
     {
         // Check Method
         $this->handleWrongMethod("PUT");
-
+        
+        $flag = false;
         // Check Empty
         if(!($cartID))
         {

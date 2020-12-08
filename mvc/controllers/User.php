@@ -61,14 +61,13 @@ class User extends Controller
 
     }
 
-    public function EditUserAvatar(): void
+    public function EditUserAvatar(string $idUser): void
     {
         $this->handleWrongMethod('POST');
-
-        $token = $this->HandleTokenValidate();
-
-        $idUser = $token->userID;
         
+        $this->HandleTokenValidate();
+
+
         if (!$this->Auth('user', ['userID' => $idUser])) {
             $this->response(400, ['code' => 400, 'message' => 'ID Invalid']);
         }
@@ -152,12 +151,11 @@ class User extends Controller
     public function ChangePassword(): void
     {
         // Check Method
-        $this->handleWrongMethod("PUT");
+        $this->handleWrongMethod("POST");
 
         // Check Token
         $token = $this->HandleTokenValidate();
 
-        // Get userID From Token
         $userID = $token->userID;
 
         // Check exist
