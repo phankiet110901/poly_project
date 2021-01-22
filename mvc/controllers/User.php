@@ -222,11 +222,6 @@ class User extends Controller
 
         $dataRes = $this->LoadModel("UserModel")->GetUserCart($idUser);
 
-        if(count($dataRes) === 0)
-        {
-            $this->response(200, ['code' => 200, 'message' => 'You Dont Have Any Order!!!']);
-        }
-
         for ($i=0; $i < count($dataRes); $i++) {
             $dataCart =  $this->LoadModel("CartModel")->GetDetailCart($dataRes[$i]['cartID']);
 
